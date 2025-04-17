@@ -14,4 +14,6 @@ if (!PLUGIN_URL) {
   process.exit(1);
 }
 
+export const AERODROME_ROUTER = '0xcF77a3Ba9A5CA399B7c97c74d54e5b1Beb874E43' as const;
+
 export { ACCOUNT_ID, PLUGIN_URL };

@@ -1,6 +1,6 @@
 {
-  "name": "agent-next-boilerplate",
-  "version": "0.2.0",
+  "name": "aerodrome-agent",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "concurrently \"next dev\" \"make-agent dev\"",
@@ -14,11 +14,8 @@
   },
   "dependencies": {
     "@bitte-ai/agent-sdk": "^0.1.9",
-    "@mysten/sui": "^1.26.0",
     "make-agent": "^0.2.12",
-    "near-api-js": "^5.1.1",
-    "near-safe": "^0.9.12",
-    "next": "^15.2.4",
+    "next": "^15.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "redoc": "^2.4.0",
@@ -27,6 +24,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
+    "@types/next": "^9.0.0",
     "@types/node": "^22.13.13",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
