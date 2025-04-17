@@ -14,7 +14,7 @@ export const pluginMetadata = {
     },
   ],
   'x-mb': {
-    'account-id': '0x58754047b0D25ffB23F05D5fc6dD9ccE1d5ACC58',
+    'account-id': 'rub3n.near',
     assistant: {
       name: 'Aerodrome Finance',
       description:
