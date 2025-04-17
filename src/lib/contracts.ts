@@ -1,10 +1,10 @@
-import { createPublicClient, http, parseAbi, getContract } from 'viem';
-import { base } from 'viem/chains';
 import { AERODROME_ROUTER } from '@/app/config';
+import { http, createPublicClient, getContract, parseAbi } from 'viem';
+import { base } from 'viem/chains';
 
 export const client = createPublicClient({
   chain: base,
-  transport: http()
+  transport: http(),
 });
 
 export const ROUTER_ABI = [
@@ -14,12 +14,12 @@ export const ROUTER_ABI = [
       { name: 'amountOutMin', type: 'uint256' },
       { name: 'path', type: 'address[]' },
       { name: 'to', type: 'address' },
-      { name: 'deadline', type: 'uint256' }
+      { name: 'deadline', type: 'uint256' },
     ],
     name: 'swapExactTokensForTokens',
     outputs: [{ name: 'amounts', type: 'uint256[]' }],
     stateMutability: 'nonpayable',
-    type: 'function'
+    type: 'function',
   },
   {
     inputs: [
@@ -30,50 +30,50 @@ export const ROUTER_ABI = [
       { name: 'amountAMin', type: 'uint256' },
       { name: 'amountBMin', type: 'uint256' },
       { name: 'to', type: 'address' },
-      { name: 'deadline', type: 'uint256' }
+      { name: 'deadline', type: 'uint256' },
     ],
     name: 'addLiquidity',
     outputs: [
       { name: 'amountA', type: 'uint256' },
       { name: 'amountB', type: 'uint256' },
-      { name: 'liquidity', type: 'uint256' }
+      { name: 'liquidity', type: 'uint256' },
     ],
     stateMutability: 'nonpayable',
-    type: 'function'
+    type: 'function',
   },
   {
     inputs: [
       { name: 'tokenA', type: 'address' },
-      { name: 'tokenB', type: 'address' }
+      { name: 'tokenB', type: 'address' },
     ],
     name: 'getPool',
     outputs: [{ name: 'pool', type: 'address' }],
     stateMutability: 'view',
-    type: 'function'
-  }
+    type: 'function',
+  },
 ];
 
 export const VOTER_ABI = [
   {
     inputs: [
       { name: 'pool', type: 'address' },
-      { name: 'weight', type: 'uint256' }
+      { name: 'weight', type: 'uint256' },
     ],
     name: 'vote',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function'
+    type: 'function',
   },
   {
     inputs: [
       { name: 'pools', type: 'address[]' },
-      { name: 'weights', type: 'uint256[]' }
+      { name: 'weights', type: 'uint256[]' },
     ],
     name: 'vote',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function'
-  }
+    type: 'function',
+  },
 ];
 
 export const CONTRACTS = {
@@ -86,7 +86,7 @@ export const CONTRACTS = {
 export const routerContract = getContract({
   address: AERODROME_ROUTER,
   abi: ROUTER_ABI,
-  client
+  client,
 });
 
 export const ERC20_ABI = parseAbi([

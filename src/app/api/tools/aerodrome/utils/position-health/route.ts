@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
+import { ERC20_ABI, POOL_ABI } from '@/lib/contracts';
 import { publicClient } from '@/lib/viem';
-import { POOL_ABI, ERC20_ABI } from '@/lib/contracts';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
@@ -11,7 +11,7 @@ export async function GET(request: Request) {
     if (!poolAddress || !positionAddress) {
       return NextResponse.json(
         { error: 'Pool address and position address are required' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -61,7 +61,8 @@ export async function GET(request: Request) {
     const token1Price = 1n; // Placeholder
 
     // Calculate position value
-    const positionValue = (token0Amount * token0Price + token1Amount * token1Price) / 1000000000000000000n;
+    const positionValue =
+      (token0Amount * token0Price + token1Amount * token1Price) / 1000000000000000000n;
 
     // Calculate health metrics
     const healthScore = 100; // Placeholder - in real implementation would consider various factors
@@ -89,9 +90,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error checking position health:', error);
-    return NextResponse.json(
-      { error: 'Failed to check position health' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to check position health' }, { status: 500 });
   }
 }

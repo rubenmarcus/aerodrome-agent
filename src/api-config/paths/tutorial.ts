@@ -69,14 +69,7 @@ export const tutorialPaths = {
           required: true,
           schema: {
             type: 'string',
-            enum: [
-              've-token',
-              'boost',
-              'bribing',
-              'voting',
-              'impermanent-loss',
-              'slippage',
-            ],
+            enum: ['ve-token', 'boost', 'bribing', 'voting', 'impermanent-loss', 'slippage'],
           },
           description: 'Concept to explain',
         },
@@ -141,14 +134,7 @@ export const tutorialPaths = {
           required: false,
           schema: {
             type: 'string',
-            enum: [
-              'getting-started',
-              'liquidity',
-              've-tokens',
-              'voting',
-              'bribing',
-              'advanced',
-            ],
+            enum: ['getting-started', 'liquidity', 've-tokens', 'voting', 'bribing', 'advanced'],
           },
           description: 'Specific section to retrieve (optional)',
         },

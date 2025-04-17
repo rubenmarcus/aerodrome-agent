@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import { publicClient } from '@/lib/viem';
 import { ERC20_ABI } from '@/lib/contracts';
+import { publicClient } from '@/lib/viem';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
@@ -8,10 +8,7 @@ export async function GET(request: Request) {
     const tokenAddress = searchParams.get('address');
 
     if (!tokenAddress) {
-      return NextResponse.json(
-        { error: 'Token address is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Token address is required' }, { status: 400 });
     }
 
     // Get token info
@@ -35,9 +32,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error getting token info:', error);
-    return NextResponse.json(
-      { error: 'Failed to get token info' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to get token info' }, { status: 500 });
   }
 }

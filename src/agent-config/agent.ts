@@ -1,4 +1,4 @@
-import { AgentConfig } from '@/types/agent';
+import type { AgentConfig } from '@/types/agent';
 
 export const agentConfig: AgentConfig = {
   name: 'Aerodrome Analytics Agent',

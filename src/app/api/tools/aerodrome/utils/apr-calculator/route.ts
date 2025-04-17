@@ -1,5 +1,5 @@
+import { getPool } from '@/utils/graph';
 import { NextResponse } from 'next/server';
-import { getPoolAPR } from '@/utils/graph';
 
 export async function GET(request: Request) {
   try {
@@ -9,14 +9,17 @@ export async function GET(request: Request) {
     const lockDuration = searchParams.get('lockDuration');
 
     if (!poolAddress) {
-      return NextResponse.json(
-        { error: 'Pool address is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Pool address is required' }, { status: 400 });
     }
 
-    // Get base APR from The Graph
-    const baseAPR = await getPoolAPR(poolAddress);
+    // Get pool data from The Graph
+    const pool = await getPool(poolAddress);
+    if (!pool) {
+      return NextResponse.json({ error: 'Pool not found' }, { status: 404 });
+    }
+
+    // Use pool's APR if available, otherwise default to 0
+    const baseAPR = pool.apr ? Number(pool.apr) : 0;
 
     // Calculate boost multiplier if lock duration is provided
     let boostMultiplier = 1;
@@ -37,9 +40,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error calculating APR:', error);
-    return NextResponse.json(
-      { error: 'Failed to calculate APR' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to calculate APR' }, { status: 500 });
   }
 }

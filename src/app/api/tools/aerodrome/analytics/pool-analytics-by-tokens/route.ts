@@ -1,6 +1,5 @@
-import { NextResponse } from 'next/server';
 import { getPools } from '@/utils/graph';
-import { AERODROME_CONTRACTS } from '@/config/contracts';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
@@ -9,10 +8,7 @@ export async function GET(request: Request) {
     const token1 = searchParams.get('token1');
 
     if (!token0 || !token1) {
-      return NextResponse.json(
-        { error: 'Both token0 and token1 are required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Both token0 and token1 are required' }, { status: 400 });
     }
 
     // First, try to find the pool by token addresses
@@ -22,17 +18,18 @@ export async function GET(request: Request) {
     });
 
     // Find the pool that contains both tokens
-    const pool = pools.find(pool =>
-      (pool.token0.id.toLowerCase() === token0.toLowerCase() &&
-       pool.token1.id.toLowerCase() === token1.toLowerCase()) ||
-      (pool.token0.id.toLowerCase() === token1.toLowerCase() &&
-       pool.token1.id.toLowerCase() === token0.toLowerCase())
+    const pool = pools.find(
+      (pool) =>
+        (pool.token0.id.toLowerCase() === token0.toLowerCase() &&
+          pool.token1.id.toLowerCase() === token1.toLowerCase()) ||
+        (pool.token0.id.toLowerCase() === token1.toLowerCase() &&
+          pool.token1.id.toLowerCase() === token0.toLowerCase()),
     );
 
     if (!pool) {
       return NextResponse.json(
         { error: 'Pool not found for the specified token pair' },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -53,9 +50,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error getting pool analytics by tokens:', error);
-    return NextResponse.json(
-      { error: 'Failed to get pool analytics' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to get pool analytics' }, { status: 500 });
   }
 }

@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
+import { POOL_ABI } from '@/lib/contracts';
 import { publicClient } from '@/lib/viem';
-import { GAUGE_ABI, POOL_ABI } from '@/lib/contracts';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
@@ -8,10 +8,7 @@ export async function GET(request: Request) {
     const poolAddress = searchParams.get('poolAddress');
 
     if (!poolAddress) {
-      return NextResponse.json(
-        { error: 'Pool address is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Pool address is required' }, { status: 400 });
     }
 
     const [totalSupply, token0, token1] = await Promise.all([
@@ -47,9 +44,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error getting gauge eligibility:', error);
-    return NextResponse.json(
-      { error: 'Failed to get gauge eligibility' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to get gauge eligibility' }, { status: 500 });
   }
 }

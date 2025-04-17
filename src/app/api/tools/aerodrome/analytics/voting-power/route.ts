@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
+import { VOTING_ESCROW_ABI } from '@/lib/contracts';
 import { publicClient } from '@/lib/viem';
-import { VOTING_ESCROW_ABI, ERC20_ABI } from '@/lib/contracts';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
@@ -8,10 +8,7 @@ export async function GET(request: Request) {
     const userAddress = searchParams.get('userAddress');
 
     if (!userAddress) {
-      return NextResponse.json(
-        { error: 'User address is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'User address is required' }, { status: 400 });
     }
 
     const [lockedBalance, unlockTime] = await publicClient.readContract({
@@ -36,9 +33,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error getting voting power:', error);
-    return NextResponse.json(
-      { error: 'Failed to get voting power' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to get voting power' }, { status: 500 });
   }
 }

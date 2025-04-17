@@ -1,16 +1,13 @@
-import { NextResponse } from 'next/server';
-import { parseEther, encodeFunctionData } from 'viem';
 import { GAUGE_ABI } from '@/lib/contracts';
+import { NextResponse } from 'next/server';
+import { encodeFunctionData, parseEther } from 'viem';
 
 export async function POST(request: Request) {
   try {
     const { gaugeAddress, amount } = await request.json();
 
     if (!gaugeAddress || !amount) {
-      return NextResponse.json(
-        { error: 'Missing required parameters' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
     }
 
     // Convert amount to wei
@@ -20,18 +17,15 @@ export async function POST(request: Request) {
     const data = encodeFunctionData({
       abi: GAUGE_ABI,
       functionName: 'deposit',
-      args: [amountWei]
+      args: [amountWei],
     });
 
     return NextResponse.json({
       to: gaugeAddress,
-      data
+      data,
     });
   } catch (error) {
     console.error('Error generating stake transaction:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate stake transaction' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to generate stake transaction' }, { status: 500 });
   }
 }

@@ -10,7 +10,13 @@
     "clean": "rm -rf .next",
     "clean:all": "rm -rf .next node_modules .turbo",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "tsc --noEmit --watch",
+    "dev:type-check": "concurrently \"next dev\" \"make-agent dev\" \"pnpm run type-check:watch\"",
+    "format": "biome format --write .",
+    "check:fix": "biome check --write"
   },
   "dependencies": {
     "@bitte-ai/agent-sdk": "^0.1.9",
@@ -23,6 +29,7 @@
     "viem": "^2.23.15"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
     "@eslint/eslintrc": "^3.3.1",
     "@types/next": "^9.0.0",
     "@types/node": "^22.13.13",

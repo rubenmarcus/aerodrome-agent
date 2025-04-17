@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import { publicClient } from '@/lib/viem';
 import { GAUGE_ABI } from '@/lib/contracts';
+import { publicClient } from '@/lib/viem';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
@@ -8,10 +8,7 @@ export async function GET(request: Request) {
     const gaugeAddress = searchParams.get('gaugeAddress');
 
     if (!gaugeAddress) {
-      return NextResponse.json(
-        { error: 'Gauge address is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Gauge address is required' }, { status: 400 });
     }
 
     const [poolAddress, totalVotes, currentApr] = await Promise.all([
@@ -39,9 +36,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error getting gauge info:', error);
-    return NextResponse.json(
-      { error: 'Failed to get gauge info' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to get gauge info' }, { status: 500 });
   }
 }

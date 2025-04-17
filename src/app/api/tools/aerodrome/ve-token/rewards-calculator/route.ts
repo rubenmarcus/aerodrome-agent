@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
+import { GAUGE_ABI, VOTING_ESCROW_ABI } from '@/lib/contracts';
 import { publicClient } from '@/lib/viem';
-import { VOTING_ESCROW_ABI, GAUGE_ABI } from '@/lib/contracts';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
@@ -11,7 +11,7 @@ export async function GET(request: Request) {
     if (!userAddress || !gaugeAddress) {
       return NextResponse.json(
         { error: 'User address and gauge address are required' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -51,7 +51,8 @@ export async function GET(request: Request) {
     const boostMultiplier = timeRemaining / maxLockTime;
 
     // Calculate rewards
-    const dailyRewards = (BigInt(rewardRate as bigint) * 86400n * BigInt(boostMultiplier)) / BigInt(totalSupply);
+    const dailyRewards =
+      (BigInt(rewardRate as bigint) * 86400n * BigInt(boostMultiplier)) / BigInt(totalSupply);
 
     return NextResponse.json({
       userAddress,
@@ -75,9 +76,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error calculating rewards:', error);
-    return NextResponse.json(
-      { error: 'Failed to calculate rewards' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to calculate rewards' }, { status: 500 });
   }
 }

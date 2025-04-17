@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
+import { ERC20_ABI, GAUGE_ABI } from '@/lib/contracts';
 import { publicClient } from '@/lib/viem';
-import { GAUGE_ABI, ERC20_ABI } from '@/lib/contracts';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
@@ -9,10 +9,7 @@ export async function GET(request: Request) {
     const amount = searchParams.get('amount');
 
     if (!gaugeAddress || !amount) {
-      return NextResponse.json(
-        { error: 'Gauge address and amount are required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Gauge address and amount are required' }, { status: 400 });
     }
 
     // Get gauge info
@@ -54,7 +51,8 @@ export async function GET(request: Request) {
     ]);
 
     // Calculate emissions rate
-    const emissionsRate = (BigInt(rewardRate as bigint) * 86400n * 365n) / (10n ** BigInt(rewardTokenDecimals));
+    const emissionsRate =
+      (BigInt(rewardRate as bigint) * 86400n * 365n) / 10n ** BigInt(rewardTokenDecimals);
 
     // Calculate bribe ROI (simplified)
     const amountNum = Number(amount);
@@ -96,9 +94,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error getting bribe strategy:', error);
-    return NextResponse.json(
-      { error: 'Failed to get bribe strategy' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to get bribe strategy' }, { status: 500 });
   }
 }

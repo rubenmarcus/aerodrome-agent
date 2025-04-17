@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import { publicClient } from '@/lib/viem';
 import { VOTING_ESCROW_ABI } from '@/lib/contracts';
+import { publicClient } from '@/lib/viem';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
@@ -11,7 +11,7 @@ export async function GET(request: Request) {
     if (!userAddress || !investmentHorizon) {
       return NextResponse.json(
         { error: 'User address and investment horizon are required' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -32,8 +32,9 @@ export async function GET(request: Request) {
     const optimalUnlockTime = currentTime + optimalLockDuration;
 
     // Calculate boost multipliers
-    const currentBoost = currentUnlockTime ?
-      (Number(currentUnlockTime as bigint) - currentTime) / maxLockTime : 0;
+    const currentBoost = currentUnlockTime
+      ? (Number(currentUnlockTime as bigint) - currentTime) / maxLockTime
+      : 0;
     const proposedBoost = optimalLockDuration / maxLockTime;
 
     return NextResponse.json({
@@ -80,9 +81,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error getting lock strategy:', error);
-    return NextResponse.json(
-      { error: 'Failed to get lock strategy' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to get lock strategy' }, { status: 500 });
   }
 }

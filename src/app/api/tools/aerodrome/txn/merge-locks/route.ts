@@ -1,6 +1,6 @@
+import { VOTING_ESCROW_ABI } from '@/lib/contracts';
 import { NextResponse } from 'next/server';
 import { encodeFunctionData } from 'viem';
-import { VOTING_ESCROW_ABI } from '@/lib/contracts';
 
 export async function POST(request: Request) {
   try {
@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     if (!fromTokenId || !toTokenId) {
       return NextResponse.json(
         { error: 'From token ID and to token ID are required' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     console.error('Error generating merge locks transaction:', error);
     return NextResponse.json(
       { error: 'Failed to generate merge locks transaction' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

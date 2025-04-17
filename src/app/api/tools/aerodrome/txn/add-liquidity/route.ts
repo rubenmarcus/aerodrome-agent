@@ -1,17 +1,24 @@
-import { NextResponse } from 'next/server';
-import { parseEther, encodeFunctionData } from 'viem';
 import { AERODROME_ROUTER } from '@/app/config';
 import { ROUTER_ABI } from '@/lib/contracts';
+import { NextResponse } from 'next/server';
+import { encodeFunctionData, parseEther } from 'viem';
 
 export async function POST(request: Request) {
   try {
-    const { tokenA, tokenB, amountADesired, amountBDesired, amountAMin, amountBMin, to, deadline } = await request.json();
+    const { tokenA, tokenB, amountADesired, amountBDesired, amountAMin, amountBMin, to, deadline } =
+      await request.json();
 
-    if (!tokenA || !tokenB || !amountADesired || !amountBDesired || !amountAMin || !amountBMin || !to || !deadline) {
-      return NextResponse.json(
-        { error: 'Missing required parameters' },
-        { status: 400 }
-      );
+    if (
+      !tokenA ||
+      !tokenB ||
+      !amountADesired ||
+      !amountBDesired ||
+      !amountAMin ||
+      !amountBMin ||
+      !to ||
+      !deadline
+    ) {
+      return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
     }
 
     // Convert amounts to wei
@@ -32,19 +39,19 @@ export async function POST(request: Request) {
         amountAMinWei,
         amountBMinWei,
         to,
-        deadline
-      ]
+        deadline,
+      ],
     });
 
     return NextResponse.json({
       to: AERODROME_ROUTER,
-      data
+      data,
     });
   } catch (error) {
     console.error('Error generating add liquidity transaction:', error);
     return NextResponse.json(
       { error: 'Failed to generate add liquidity transaction' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

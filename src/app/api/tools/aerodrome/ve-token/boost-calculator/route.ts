@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import { publicClient } from '@/lib/viem';
 import { VOTING_ESCROW_ABI } from '@/lib/contracts';
+import { publicClient } from '@/lib/viem';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
@@ -12,7 +12,7 @@ export async function GET(request: Request) {
     if (!userAddress || !lockDuration || !lockAmount) {
       return NextResponse.json(
         { error: 'User address, lock duration, and lock amount are required' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -58,9 +58,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error calculating boost:', error);
-    return NextResponse.json(
-      { error: 'Failed to calculate boost' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to calculate boost' }, { status: 500 });
   }
 }

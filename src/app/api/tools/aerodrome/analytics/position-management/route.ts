@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
+import { ERC20_ABI, POOL_ABI } from '@/lib/contracts';
 import { publicClient } from '@/lib/viem';
-import { POOL_ABI, ERC20_ABI } from '@/lib/contracts';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
@@ -12,7 +12,7 @@ export async function GET(request: Request) {
     if (!poolAddress || !amount || !action) {
       return NextResponse.json(
         { error: 'Pool address, amount, and action are required' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -67,7 +67,8 @@ export async function GET(request: Request) {
     ]);
 
     // Calculate optimal amounts based on action
-    let token0Amount, token1Amount;
+    let token0Amount;
+    let token1Amount;
     if (action === 'enter') {
       // Calculate optimal entry amounts to maintain pool ratio
       const amountNum = Number(amount);
@@ -85,9 +86,8 @@ export async function GET(request: Request) {
     const slippage = 0.005; // 0.5% default slippage
 
     // Calculate price impact (simplified)
-    const priceImpact = action === 'enter'
-      ? (Number(amount) / Number(reserve0 + reserve1)) * 100
-      : 0;
+    const priceImpact =
+      action === 'enter' ? (Number(amount) / Number(reserve0 + reserve1)) * 100 : 0;
 
     return NextResponse.json({
       poolAddress,
@@ -124,9 +124,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error getting position management:', error);
-    return NextResponse.json(
-      { error: 'Failed to get position management' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to get position management' }, { status: 500 });
   }
 }

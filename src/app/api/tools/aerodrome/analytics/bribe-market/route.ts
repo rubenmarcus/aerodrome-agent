@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
+import { BRIBE_ABI, CONTRACTS, ERC20_ABI, GAUGE_ABI } from '@/lib/contracts';
 import { publicClient } from '@/lib/viem';
-import { GAUGE_ABI, ERC20_ABI, BRIBE_ABI, CONTRACTS } from '@/lib/contracts';
 import { getBribeStrategy } from '@/utils/graph';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
@@ -9,10 +9,7 @@ export async function GET(request: Request) {
     const gaugeAddress = searchParams.get('gaugeAddress');
 
     if (!gaugeAddress) {
-      return NextResponse.json(
-        { error: 'Gauge address is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Gauge address is required' }, { status: 400 });
     }
 
     // Get basic gauge info
@@ -60,8 +57,12 @@ export async function GET(request: Request) {
     const bribeStrategy = await getBribeStrategy(gaugeAddress);
 
     // Calculate market metrics
-    const totalBribeValue = activeBribes.reduce((sum: bigint, bribe: any) => sum + BigInt(bribe.amount), 0n);
-    const averageBribeApr = activeBribes.reduce((sum: bigint, bribe: any) => sum + BigInt(bribe.apr), 0n) /
+    const totalBribeValue = activeBribes.reduce(
+      (sum: bigint, bribe: any) => sum + BigInt(bribe.amount),
+      0n,
+    );
+    const averageBribeApr =
+      activeBribes.reduce((sum: bigint, bribe: any) => sum + BigInt(bribe.apr), 0n) /
       (activeBribes.length > 0 ? BigInt(activeBribes.length) : 1n);
 
     return NextResponse.json({
@@ -93,9 +94,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error getting bribe market info:', error);
-    return NextResponse.json(
-      { error: 'Failed to get bribe market info' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to get bribe market info' }, { status: 500 });
   }
 }

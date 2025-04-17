@@ -6,10 +6,7 @@ export async function GET(request: Request) {
     const lockDuration = searchParams.get('lockDuration');
 
     if (!lockDuration) {
-      return NextResponse.json(
-        { error: 'Lock duration is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Lock duration is required' }, { status: 400 });
     }
 
     // Calculate boost multiplier
@@ -27,9 +24,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error calculating boost:', error);
-    return NextResponse.json(
-      { error: 'Failed to calculate boost' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to calculate boost' }, { status: 500 });
   }
 }

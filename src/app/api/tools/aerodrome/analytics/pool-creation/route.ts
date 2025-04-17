@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import { publicClient } from '@/lib/viem';
 import { ERC20_ABI } from '@/lib/contracts';
+import { publicClient } from '@/lib/viem';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
@@ -9,10 +9,7 @@ export async function GET(request: Request) {
     const token1Address = searchParams.get('token1');
 
     if (!token0Address || !token1Address) {
-      return NextResponse.json(
-        { error: 'Both token addresses are required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Both token addresses are required' }, { status: 400 });
     }
 
     const [token0Symbol, token1Symbol, token0Decimals, token1Decimals] = await Promise.all([
@@ -59,9 +56,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error getting pool creation info:', error);
-    return NextResponse.json(
-      { error: 'Failed to get pool creation info' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to get pool creation info' }, { status: 500 });
   }
 }

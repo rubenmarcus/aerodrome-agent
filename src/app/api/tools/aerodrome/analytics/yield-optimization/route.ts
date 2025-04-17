@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { publicClient } from '@/lib/viem';
-import { GAUGE_ABI, ERC20_ABI } from '@/lib/contracts';
+import { getYieldOptimization } from '@/utils/graph';
 
 export async function GET(request: Request) {
   try {
@@ -9,10 +8,7 @@ export async function GET(request: Request) {
     const amount = searchParams.get('amount');
 
     if (!amount) {
-      return NextResponse.json(
-        { error: 'Amount is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Amount is required' }, { status: 400 });
     }
 
     // Get all pools (placeholder - would get from The Graph in real implementation)
@@ -52,7 +48,7 @@ export async function GET(request: Request) {
     ];
 
     // Filter pools based on risk tolerance
-    const filteredPools = pools.filter(pool => {
+    const filteredPools = pools.filter((pool) => {
       switch (riskTolerance) {
         case 'low':
           return pool.riskLevel === 'low';
@@ -81,8 +77,9 @@ export async function GET(request: Request) {
     });
 
     // Calculate total expected yield
-    const totalExpectedYield = allocation.reduce((sum, pos) =>
-      sum + Number(pos.allocation) * Number(pos.expectedApr), 0
+    const totalExpectedYield = allocation.reduce(
+      (sum, pos) => sum + Number(pos.allocation) * Number(pos.expectedApr),
+      0,
     );
 
     return NextResponse.json({
@@ -98,9 +95,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error getting yield optimization:', error);
-    return NextResponse.json(
-      { error: 'Failed to get yield optimization' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to get yield optimization' }, { status: 500 });
   }
 }

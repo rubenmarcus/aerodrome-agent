@@ -36,9 +36,7 @@ export const AERODROME_ABI = {
     'function withdrawBribe(address token) external',
     'function claimBribes() external',
   ],
-  FEE_DISTRIBUTOR: [
-    'function claimFees() external',
-  ],
+  FEE_DISTRIBUTOR: ['function claimFees() external'],
 };
 
 export const POOL_FEES = {

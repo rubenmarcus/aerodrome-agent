@@ -1,16 +1,13 @@
+import { VOTING_ESCROW_ABI } from '@/lib/contracts';
 import { NextResponse } from 'next/server';
 import { encodeFunctionData } from 'viem';
-import { VOTING_ESCROW_ABI } from '@/lib/contracts';
 
 export async function POST(request: Request) {
   try {
     const { tokenId, amount } = await request.json();
 
     if (!tokenId || !amount) {
-      return NextResponse.json(
-        { error: 'Token ID and amount are required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Token ID and amount are required' }, { status: 400 });
     }
 
     const data = encodeFunctionData({
@@ -27,7 +24,7 @@ export async function POST(request: Request) {
     console.error('Error generating split lock transaction:', error);
     return NextResponse.json(
       { error: 'Failed to generate split lock transaction' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

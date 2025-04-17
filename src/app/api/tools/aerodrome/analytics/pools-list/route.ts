@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
 import { getPools } from '@/utils/graph';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
@@ -32,7 +32,7 @@ export async function GET(request: Request) {
     console.error('Error getting pools list:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to get pools list' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

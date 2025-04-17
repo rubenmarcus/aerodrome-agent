@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
-import { publicClient } from '@/lib/viem';
+import { AERODROME_ROUTER } from '@/app/config';
 import { ROUTER_ABI } from '@/lib/contracts';
-import { AERODROME_ROUTER, TOKENS } from '@/app/config';
+import { publicClient } from '@/lib/viem';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
@@ -10,10 +10,7 @@ export async function GET(request: Request) {
     const token1 = searchParams.get('token1');
 
     if (!token0 || !token1) {
-      return NextResponse.json(
-        { error: 'Both token addresses are required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Both token0 and token1 are required' }, { status: 400 });
     }
 
     const poolAddress = await publicClient.readContract({
@@ -23,14 +20,9 @@ export async function GET(request: Request) {
       args: [token0 as `0x${string}`, token1 as `0x${string}`],
     });
 
-    return NextResponse.json({
-      poolAddress,
-    });
+    return NextResponse.json({ poolAddress });
   } catch (error) {
     console.error('Error getting pool address:', error);
-    return NextResponse.json(
-      { error: 'Failed to get pool address' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to get pool address' }, { status: 500 });
   }
 }

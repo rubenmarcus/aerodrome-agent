@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
+import { ERC20_ABI, GAUGE_ABI } from '@/lib/contracts';
 import { publicClient } from '@/lib/viem';
-import { GAUGE_ABI, ERC20_ABI } from '@/lib/contracts';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
@@ -9,10 +9,7 @@ export async function GET(request: Request) {
     const userAddress = searchParams.get('userAddress');
 
     if (!gaugeAddress) {
-      return NextResponse.json(
-        { error: 'Gauge address is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Gauge address is required' }, { status: 400 });
     }
 
     // Get gauge info
@@ -54,7 +51,8 @@ export async function GET(request: Request) {
     ]);
 
     // Calculate emissions rate
-    const emissionsRate = (BigInt(rewardRate as bigint) * 86400n * 365n) / (10n ** BigInt(rewardTokenDecimals));
+    const emissionsRate =
+      (BigInt(rewardRate as bigint) * 86400n * 365n) / 10n ** BigInt(rewardTokenDecimals);
 
     // Get user info if address provided
     let userInfo = null;
@@ -75,9 +73,10 @@ export async function GET(request: Request) {
       ]);
 
       // Calculate user share
-      const userShare = BigInt(totalSupply as bigint) > 0n
-        ? (BigInt(balance as bigint) * 10000n) / BigInt(totalSupply as bigint)
-        : 0n;
+      const userShare =
+        BigInt(totalSupply as bigint) > 0n
+          ? (BigInt(balance as bigint) * 10000n) / BigInt(totalSupply as bigint)
+          : 0n;
 
       // Calculate boost multiplier (simplified - would use veAERO balance in real implementation)
       const boostMultiplier = 1;
@@ -110,9 +109,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error getting gauge analysis:', error);
-    return NextResponse.json(
-      { error: 'Failed to get gauge analysis' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to get gauge analysis' }, { status: 500 });
   }
 }

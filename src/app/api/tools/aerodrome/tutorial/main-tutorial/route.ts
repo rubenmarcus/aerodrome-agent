@@ -14,21 +14,21 @@ export async function GET(request: Request) {
           'Managing your liquidity positions',
           'Optimizing your yield',
           'Participating in governance',
-          'Creating and managing bribes'
+          'Creating and managing bribes',
         ],
-        nextStep: '2'
+        nextStep: '2',
       },
       '2': {
         title: 'Liquidity Management',
-        content: 'Here\'s what you can do with liquidity:',
+        content: "Here's what you can do with liquidity:",
         sections: [
           'Add liquidity to pools',
           'Remove liquidity when needed',
           'Monitor your position health',
           'Calculate optimal liquidity amounts',
-          'Understand impermanent loss risks'
+          'Understand impermanent loss risks',
         ],
-        nextStep: '3'
+        nextStep: '3',
       },
       '3': {
         title: 'Yield Optimization',
@@ -38,9 +38,9 @@ export async function GET(request: Request) {
           'Understanding bribe strategies',
           'Optimizing lock durations',
           'Tracking your portfolio performance',
-          'Finding the best yield opportunities'
+          'Finding the best yield opportunities',
         ],
-        nextStep: '4'
+        nextStep: '4',
       },
       '4': {
         title: 'Governance Participation',
@@ -50,9 +50,9 @@ export async function GET(request: Request) {
           'Vote on gauge weights',
           'Create and manage bribes',
           'Track voting power distribution',
-          'Understand governance incentives'
+          'Understand governance incentives',
         ],
-        nextStep: '5'
+        nextStep: '5',
       },
       '5': {
         title: 'Getting Help',
@@ -62,22 +62,19 @@ export async function GET(request: Request) {
           'Get explanations of common mistakes',
           'Request step-by-step guides',
           'Get personalized recommendations',
-          'Learn about best practices'
+          'Learn about best practices',
         ],
-        nextStep: '1'
-      }
+        nextStep: '1',
+      },
     };
 
     return NextResponse.json({
       currentStep: step,
       tutorial: tutorials[step as keyof typeof tutorials],
-      availableSteps: Object.keys(tutorials)
+      availableSteps: Object.keys(tutorials),
     });
   } catch (error) {
     console.error('Error getting tutorial:', error);
-    return NextResponse.json(
-      { error: 'Failed to get tutorial' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to get tutorial' }, { status: 500 });
   }
 }

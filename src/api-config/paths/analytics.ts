@@ -2,7 +2,8 @@ export const analyticsPaths = {
   '/api/tools/aerodrome/analytics/pool-analytics': {
     get: {
       summary: 'Get pool analytics',
-      description: 'Retrieves analytics data for a specific liquidity pool by pool ID or token pair',
+      description:
+        'Retrieves analytics data for a specific liquidity pool by pool ID or token pair',
       operationId: 'get-pool-analytics',
       parameters: [
         {

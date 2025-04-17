@@ -1,5 +1,6 @@
 export const GRAPH_CONFIG = {
-  BASE_URL: 'https://gateway.thegraph.com/api/subgraphs/id/GENunSHWLBXm59mBSgPzQ8metBEp9YDfdqwFr91Av1UM',
+  BASE_URL:
+    'https://gateway.thegraph.com/api/subgraphs/id/GENunSHWLBXm59mBSgPzQ8metBEp9YDfdqwFr91Av1UM',
   getApiKey: () => {
     const apiKey = process.env.GRAPH_API_KEY;
     if (!apiKey) {

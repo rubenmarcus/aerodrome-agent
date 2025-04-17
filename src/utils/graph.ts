@@ -1,4 +1,13 @@
-import { GRAPH_CONFIG, GraphPool, GraphGauge, GraphPortfolio, GraphYieldStrategy, GraphPositionManagement, GraphBribeStrategy, GraphRouting } from '@/config/graph';
+import {
+  GRAPH_CONFIG,
+  type GraphBribeStrategy,
+  type GraphGauge,
+  type GraphPool,
+  type GraphPortfolio,
+  type GraphPositionManagement,
+  type GraphRouting,
+  type GraphYieldStrategy,
+} from '@/config/graph';
 
 async function fetchGraph<T>(query: string, variables?: Record<string, any>): Promise<T> {
   try {
@@ -7,7 +16,7 @@ async function fetchGraph<T>(query: string, variables?: Record<string, any>): Pr
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${GRAPH_CONFIG.getApiKey()}`,
+        Authorization: `Bearer ${GRAPH_CONFIG.getApiKey()}`,
       },
       body: JSON.stringify({
         query,
@@ -60,8 +69,45 @@ async function fetchGraph<T>(query: string, variables?: Record<string, any>): Pr
   }
 }
 
+export async function getPool(poolId: string): Promise<GraphPool | null> {
+  const query = `
+    query GetPool($id: ID!) {
+      pool(id: $id) {
+        id
+        token0 {
+          id
+          symbol
+          decimals
+        }
+        token1 {
+          id
+          symbol
+          decimals
+        }
+        feeTier
+        liquidity
+        sqrtPrice
+        tick
+        volumeToken0
+        volumeToken1
+        volumeUSD
+        feesUSD
+        totalValueLockedToken0
+        totalValueLockedToken1
+        totalValueLockedUSD
+        txCount
+      }
+    }
+  `;
+
+  const data = await fetchGraph<{ pool: GraphPool }>(query, { id: poolId.toLowerCase() });
+  return data.pool || null;
+}
+
 export async function getPools(params?: {
   token?: string;
+  token0?: string;
+  token1?: string;
   minLiquidity?: string;
   minVolume?: string;
   feeTier?: string;
@@ -115,11 +161,10 @@ export async function getPools(params?: {
 
   const where = {
     ...(params?.token && {
-      or: [
-        { token0: params.token.toLowerCase() },
-        { token1: params.token.toLowerCase() },
-      ],
+      or: [{ token0: params.token.toLowerCase() }, { token1: params.token.toLowerCase() }],
     }),
+    ...(params?.token0 && { token0: params.token0.toLowerCase() }),
+    ...(params?.token1 && { token1: params.token1.toLowerCase() }),
     ...(params?.minLiquidity && { liquidity_gte: params.minLiquidity }),
     ...(params?.minVolume && { volumeUSD_gte: params.minVolume }),
     ...(params?.feeTier && { feeTier: params.feeTier }),
@@ -217,19 +262,23 @@ export async function getPortfolio(address: string): Promise<GraphPortfolio> {
     throw new Error('No portfolio data found for address');
   }
 
-  const totalValue = data.user.positions.reduce((sum, pos) => sum + parseFloat(pos.value), 0).toString();
+  const totalValue = data.user.positions
+    .reduce((sum, pos) => sum + Number.parseFloat(pos.value), 0)
+    .toString();
 
   return {
     totalValue,
-    positions: data.user.positions.map(pos => ({
+    positions: data.user.positions.map((pos) => ({
       pool: pos.pool,
       value: pos.value,
-      rewards: pos.rewards
-    }))
+      rewards: pos.rewards,
+    })),
   };
 }
 
-export async function getYieldOptimization(riskTolerance: 'low' | 'medium' | 'high'): Promise<{ strategies: GraphYieldStrategy[] }> {
+export async function getYieldOptimization(
+  _riskTolerance: 'low' | 'medium' | 'high',
+): Promise<{ strategies: GraphYieldStrategy[] }> {
   const query = `
     query GetYieldOptimization {
       pools(
@@ -250,15 +299,18 @@ export async function getYieldOptimization(riskTolerance: 'low' | 'medium' | 'hi
   }
 
   return {
-    strategies: data.pools.map(pool => ({
+    strategies: data.pools.map((pool) => ({
       pool: pool.id,
       expectedYield: pool.apr || '0',
-      riskLevel: pool.riskLevel || 'medium'
-    }))
+      riskLevel: pool.riskLevel || 'medium',
+    })),
   };
 }
 
-export async function getPositionManagement(poolAddress: string, amount: string): Promise<GraphPositionManagement> {
+export async function getPositionManagement(
+  poolAddress: string,
+  amount: string,
+): Promise<GraphPositionManagement> {
   const query = `
     query GetPositionManagement($poolAddress: String!) {
       pool(id: $poolAddress) {
@@ -287,7 +339,7 @@ export async function getPositionManagement(poolAddress: string, amount: string)
 
   return {
     optimalEntry,
-    optimalExit
+    optimalExit,
   };
 }
 
@@ -319,7 +371,7 @@ export async function getBribeStrategy(gaugeAddress: string): Promise<GraphBribe
 export async function getOptimalRouting(
   tokenIn: string,
   tokenOut: string,
-  amount: string
+  amount: string,
 ): Promise<GraphRouting> {
   const query = `
     query GetOptimalRouting($tokenIn: String!, $tokenOut: String!) {
@@ -358,7 +410,10 @@ export async function getOptimalRouting(
 }
 
 // Helper functions for calculations
-function calculateOptimalEntry(pool: GraphPool, amount: string): GraphPositionManagement['optimalEntry'] {
+function calculateOptimalEntry(
+  pool: GraphPool,
+  amount: string,
+): GraphPositionManagement['optimalEntry'] {
   // Convert amount to BigInt for precise calculations
   const amountIn = BigInt(amount);
   const sqrtPrice = BigInt(pool.sqrtPrice);
@@ -379,11 +434,14 @@ function calculateOptimalEntry(pool: GraphPool, amount: string): GraphPositionMa
   return {
     token0Amount: optimalToken0Amount.toString(),
     token1Amount: optimalToken1Amount.toString(),
-    slippage: slippage.toString()
+    slippage: slippage.toString(),
   };
 }
 
-function calculateOptimalExit(pool: GraphPool, amount: string): GraphPositionManagement['optimalExit'] {
+function calculateOptimalExit(
+  pool: GraphPool,
+  amount: string,
+): GraphPositionManagement['optimalExit'] {
   // Convert amount to BigInt for precise calculations
   const amountIn = BigInt(amount);
   const sqrtPrice = BigInt(pool.sqrtPrice);
@@ -404,7 +462,7 @@ function calculateOptimalExit(pool: GraphPool, amount: string): GraphPositionMan
   return {
     token0Amount: optimalToken0Amount.toString(),
     token1Amount: optimalToken1Amount.toString(),
-    slippage: slippage.toString()
+    slippage: slippage.toString(),
   };
 }
 
@@ -413,7 +471,7 @@ function calculateBribeStrategy(gauge: GraphGauge): GraphBribeStrategy {
     return {
       roi: '0',
       optimalAmount: '0',
-      timing: '0'
+      timing: '0',
     };
   }
 
@@ -438,21 +496,26 @@ function calculateBribeStrategy(gauge: GraphGauge): GraphBribeStrategy {
   // Calculate optimal timing (next epoch)
   const currentTime = BigInt(Math.floor(Date.now() / 1000));
   const epochLength = BigInt(7 * 24 * 60 * 60); // 1 week in seconds
-  const nextEpoch = ((currentTime / epochLength) + BigInt(1)) * epochLength;
+  const nextEpoch = (currentTime / epochLength + BigInt(1)) * epochLength;
 
   return {
     roi: roi.toString(),
     optimalAmount: optimalAmount.toString(),
-    timing: nextEpoch.toString()
+    timing: nextEpoch.toString(),
   };
 }
 
-function calculateOptimalRoute(pools: GraphPool[], tokenIn: string, tokenOut: string, amount: string): GraphRouting {
+function calculateOptimalRoute(
+  pools: GraphPool[],
+  tokenIn: string,
+  tokenOut: string,
+  amount: string,
+): GraphRouting {
   if (pools.length === 0) {
     return {
       path: [],
       expectedOutput: '0',
-      gasCost: '0'
+      gasCost: '0',
     };
   }
 
@@ -463,11 +526,12 @@ function calculateOptimalRoute(pools: GraphPool[], tokenIn: string, tokenOut: st
   let bestGasCost = BigInt(0);
 
   // Find direct pool if it exists
-  const directPool = pools.find(pool =>
-    (pool.token0.id.toLowerCase() === tokenIn.toLowerCase() &&
-     pool.token1.id.toLowerCase() === tokenOut.toLowerCase()) ||
-    (pool.token0.id.toLowerCase() === tokenOut.toLowerCase() &&
-     pool.token1.id.toLowerCase() === tokenIn.toLowerCase())
+  const directPool = pools.find(
+    (pool) =>
+      (pool.token0.id.toLowerCase() === tokenIn.toLowerCase() &&
+        pool.token1.id.toLowerCase() === tokenOut.toLowerCase()) ||
+      (pool.token0.id.toLowerCase() === tokenOut.toLowerCase() &&
+        pool.token1.id.toLowerCase() === tokenIn.toLowerCase()),
   );
 
   if (directPool) {
@@ -484,20 +548,21 @@ function calculateOptimalRoute(pools: GraphPool[], tokenIn: string, tokenOut: st
 
   // Find potential multi-hop routes
   for (const pool1 of pools) {
-    if (pool1.token0.id.toLowerCase() === tokenIn.toLowerCase() ||
-        pool1.token1.id.toLowerCase() === tokenIn.toLowerCase()) {
-
-      const intermediateToken = pool1.token0.id.toLowerCase() === tokenIn.toLowerCase()
-        ? pool1.token1.id
-        : pool1.token0.id;
+    if (
+      pool1.token0.id.toLowerCase() === tokenIn.toLowerCase() ||
+      pool1.token1.id.toLowerCase() === tokenIn.toLowerCase()
+    ) {
+      const intermediateToken =
+        pool1.token0.id.toLowerCase() === tokenIn.toLowerCase() ? pool1.token1.id : pool1.token0.id;
 
       for (const pool2 of pools) {
-        if (pool2 !== pool1 &&
-            (pool2.token0.id.toLowerCase() === intermediateToken.toLowerCase() &&
-             pool2.token1.id.toLowerCase() === tokenOut.toLowerCase()) ||
-            (pool2.token0.id.toLowerCase() === tokenOut.toLowerCase() &&
-             pool2.token1.id.toLowerCase() === intermediateToken.toLowerCase())) {
-
+        if (
+          (pool2 !== pool1 &&
+            pool2.token0.id.toLowerCase() === intermediateToken.toLowerCase() &&
+            pool2.token1.id.toLowerCase() === tokenOut.toLowerCase()) ||
+          (pool2.token0.id.toLowerCase() === tokenOut.toLowerCase() &&
+            pool2.token1.id.toLowerCase() === intermediateToken.toLowerCase())
+        ) {
           // Calculate two-hop swap output
           const intermediateOutput = calculateSwapOutput(pool1, amountIn, tokenIn);
           const finalOutput = calculateSwapOutput(pool2, intermediateOutput, intermediateToken);
@@ -516,12 +581,12 @@ function calculateOptimalRoute(pools: GraphPool[], tokenIn: string, tokenOut: st
   return {
     path: bestPath,
     expectedOutput: bestOutput.toString(),
-    gasCost: bestGasCost.toString()
+    gasCost: bestGasCost.toString(),
   };
 }
 
 // Helper functions for calculations
-function calculateSlippage(amount: bigint, liquidity: bigint, price: bigint): bigint {
+function calculateSlippage(amount: bigint, liquidity: bigint, _price: bigint): bigint {
   // Calculate price impact
   const priceImpact = (amount * BigInt(10000)) / liquidity;
 
@@ -531,7 +596,7 @@ function calculateSlippage(amount: bigint, liquidity: bigint, price: bigint): bi
 
 function calculateSwapOutput(pool: GraphPool, amountIn: bigint, tokenIn: string): bigint {
   const sqrtPrice = BigInt(pool.sqrtPrice);
-  const liquidity = BigInt(pool.liquidity);
+  const _liquidity = BigInt(pool.liquidity);
 
   // Determine if tokenIn is token0 or token1
   const isToken0 = pool.token0.id.toLowerCase() === tokenIn.toLowerCase();

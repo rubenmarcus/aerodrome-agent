@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
+import { ERC20_ABI } from '@/lib/contracts';
 import { publicClient } from '@/lib/viem';
-import { GAUGE_ABI, ERC20_ABI } from '@/lib/contracts';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
@@ -8,10 +8,7 @@ export async function GET(request: Request) {
     const userAddress = searchParams.get('userAddress');
 
     if (!userAddress) {
-      return NextResponse.json(
-        { error: 'User address is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'User address is required' }, { status: 400 });
     }
 
     // Get user's veAERO balance
@@ -61,7 +58,8 @@ export async function GET(request: Request) {
     ];
 
     // Calculate total portfolio value (simplified)
-    const totalValue = lpPositions.reduce((sum, pos) => sum + Number(pos.value), 0) +
+    const totalValue =
+      lpPositions.reduce((sum, pos) => sum + Number(pos.value), 0) +
       stakedPositions.reduce((sum, pos) => sum + Number(pos.value), 0) +
       Number(veAeroBalance) / 1e18 +
       Number(aeroBalance) / 1e18;
@@ -78,9 +76,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error getting portfolio tracking:', error);
-    return NextResponse.json(
-      { error: 'Failed to get portfolio tracking' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to get portfolio tracking' }, { status: 500 });
   }
 }

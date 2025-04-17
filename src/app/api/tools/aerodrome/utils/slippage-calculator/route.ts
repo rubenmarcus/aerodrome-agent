@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import { publicClient } from '@/lib/viem';
 import { POOL_ABI } from '@/lib/contracts';
+import { publicClient } from '@/lib/viem';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
@@ -12,7 +12,7 @@ export async function GET(request: Request) {
     if (!poolAddress || !amount || !tokenIn) {
       return NextResponse.json(
         { error: 'Pool address, amount, and tokenIn are required' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -41,9 +41,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error calculating slippage:', error);
-    return NextResponse.json(
-      { error: 'Failed to calculate slippage' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to calculate slippage' }, { status: 500 });
   }
 }

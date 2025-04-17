@@ -1,8 +1,8 @@
-import { txnPaths } from './txn';
 import { analyticsPaths } from './analytics';
+import { poolsPaths } from './pools';
 import { positionPaths } from './position';
 import { routingPaths } from './routing';
-import { poolsPaths } from './pools';
+import { txnPaths } from './txn';
 
 export const paths = {
   ...txnPaths,

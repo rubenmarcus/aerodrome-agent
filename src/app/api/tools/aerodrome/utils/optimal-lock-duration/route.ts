@@ -1,6 +1,4 @@
 import { NextResponse } from 'next/server';
-import { publicClient } from '@/lib/viem';
-import { VOTING_ESCROW_ABI, CONTRACTS } from '@/lib/contracts';
 
 export async function GET(request: Request) {
   try {
@@ -9,10 +7,7 @@ export async function GET(request: Request) {
     const targetVotingPower = searchParams.get('targetVotingPower');
 
     if (!amount) {
-      return NextResponse.json(
-        { error: 'Amount is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Amount is required' }, { status: 400 });
     }
 
     // Calculate optimal lock duration based on target voting power
@@ -23,12 +18,12 @@ export async function GET(request: Request) {
     if (targetVotingPower) {
       // Calculate duration needed to achieve target voting power
       const targetVP = BigInt(targetVotingPower);
-      optimalDuration = (targetVP * BigInt(maxLockDuration)) / amountWei;
+      optimalDuration = Number((targetVP * BigInt(maxLockDuration)) / amountWei);
     }
 
     // Calculate voting power for different durations
-    const durations = [7, 30, 90, 180, 365, 730, 1095, 1460].map(days => days * 24 * 60 * 60);
-    const votingPowers = durations.map(duration => {
+    const durations = [7, 30, 90, 180, 365, 730, 1095, 1460].map((days) => days * 24 * 60 * 60);
+    const votingPowers = durations.map((duration) => {
       const boost = Number(duration) / maxLockDuration;
       return (amountWei * BigInt(Math.floor(boost * 10000))) / 10000n;
     });
@@ -47,7 +42,7 @@ export async function GET(request: Request) {
     console.error('Error calculating optimal lock duration:', error);
     return NextResponse.json(
       { error: 'Failed to calculate optimal lock duration' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

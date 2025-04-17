@@ -1,11 +1,11 @@
-
 const BASE_URL = 'https://aerodrome-agent.vercel.app';
 
 export const pluginMetadata = {
   openapi: '3.0.0',
   info: {
     title: 'Aerodrome Finance',
-    description: 'Your comprehensive DeFi assistant for Aerodrome Protocol on Base network. Generate transactions, analyze pools, optimize yields, and manage your DeFi portfolio with confidence.',
+    description:
+      'Your comprehensive DeFi assistant for Aerodrome Protocol on Base network. Generate transactions, analyze pools, optimize yields, and manage your DeFi portfolio with confidence.',
     version: '1.0.0',
   },
   servers: [
@@ -17,7 +17,8 @@ export const pluginMetadata = {
     'account-id': '0x58754047b0D25ffB23F05D5fc6dD9ccE1d5ACC58',
     assistant: {
       name: 'Aerodrome Finance',
-      description: 'Your expert guide for Aerodrome Protocol on Base network. I help you navigate DeFi operations, optimize yields, and make informed decisions with real-time analytics and transaction support. I provide comprehensive tools for pool analytics, gauge management, yield optimization, position management, bribe strategies, trading optimization, and portfolio tracking.',
+      description:
+        'Your expert guide for Aerodrome Protocol on Base network. I help you navigate DeFi operations, optimize yields, and make informed decisions with real-time analytics and transaction support. I provide comprehensive tools for pool analytics, gauge management, yield optimization, position management, bribe strategies, trading optimization, and portfolio tracking.',
       instructions: `
       I am your dedicated Aerodrome Protocol assistant, specialized in Base network operations. I provide comprehensive support for all your DeFi needs while maintaining strict security and accuracy standards.
 
@@ -184,134 +185,143 @@ I maintain these standards to ensure secure, efficient, and profitable DeFi oper
       tools: [
         {
           type: 'generate-tx',
-          description: 'Generate secure and optimized transactions for Aerodrome Protocol operations with built-in parameter validation and security checks'
+          description:
+            'Generate secure and optimized transactions for Aerodrome Protocol operations with built-in parameter validation and security checks',
         },
         {
           type: 'get-pool-analytics',
-          description: 'Access comprehensive pool metrics including APR/APY, volume, liquidity, and historical performance data'
+          description:
+            'Access comprehensive pool metrics including APR/APY, volume, liquidity, and historical performance data',
         },
         {
           type: 'get-gauge-analysis',
-          description: 'Analyze gauge performance, voting power, boost multipliers, and emission schedules'
+          description:
+            'Analyze gauge performance, voting power, boost multipliers, and emission schedules',
         },
         {
           type: 'get-yield-optimization',
-          description: 'Get optimized yield strategies with risk-adjusted returns and capital efficiency analysis'
+          description:
+            'Get optimized yield strategies with risk-adjusted returns and capital efficiency analysis',
         },
         {
           type: 'get-position-management',
-          description: 'Manage positions with optimal entry/exit strategies and risk management recommendations'
+          description:
+            'Manage positions with optimal entry/exit strategies and risk management recommendations',
         },
         {
           type: 'get-bribe-strategy',
-          description: 'Analyze and optimize bribe strategies with ROI calculations and timing recommendations'
+          description:
+            'Analyze and optimize bribe strategies with ROI calculations and timing recommendations',
         },
         {
           type: 'get-optimal-routing',
-          description: 'Find optimal trading routes with gas optimization and slippage protection'
+          description: 'Find optimal trading routes with gas optimization and slippage protection',
         },
         {
           type: 'get-portfolio-tracking',
-          description: 'Track portfolio performance with real-time monitoring and analytics'
+          description: 'Track portfolio performance with real-time monitoring and analytics',
         },
         {
           type: 'get-pools-list',
-          description: 'Access up-to-date list of all available pools with their current metrics and status'
+          description:
+            'Access up-to-date list of all available pools with their current metrics and status',
         },
         // Transaction Tools
         {
           type: 'swap-tokens',
-          description: 'Execute token swaps with optimal routing and slippage protection'
+          description: 'Execute token swaps with optimal routing and slippage protection',
         },
         {
           type: 'add-liquidity',
-          description: 'Add liquidity to pools with optimal token ratios and slippage protection'
+          description: 'Add liquidity to pools with optimal token ratios and slippage protection',
         },
         {
           type: 'remove-liquidity',
-          description: 'Remove liquidity from pools with minimal slippage and optimal token ratios'
+          description: 'Remove liquidity from pools with minimal slippage and optimal token ratios',
         },
         {
           type: 'stake-lp',
-          description: 'Stake LP tokens in gauges to earn rewards and boost multipliers'
+          description: 'Stake LP tokens in gauges to earn rewards and boost multipliers',
         },
         {
           type: 'unstake-lp',
-          description: 'Unstake LP tokens from gauges with optimal timing'
+          description: 'Unstake LP tokens from gauges with optimal timing',
         },
         {
           type: 'claim-rewards',
-          description: 'Claim rewards from gauges and pools with gas optimization'
+          description: 'Claim rewards from gauges and pools with gas optimization',
         },
         // veToken Tools
         {
           type: 'lock-tokens',
-          description: 'Lock tokens to create veAERO with optimal lock duration and amount'
+          description: 'Lock tokens to create veAERO with optimal lock duration and amount',
         },
         {
           type: 'extend-lock',
-          description: 'Extend veAERO lock duration to maintain or increase voting power'
+          description: 'Extend veAERO lock duration to maintain or increase voting power',
         },
         {
           type: 'increase-lock',
-          description: 'Increase veAERO amount while maintaining existing lock duration'
+          description: 'Increase veAERO amount while maintaining existing lock duration',
         },
         {
           type: 'get-ve-balance',
-          description: 'Check veAERO balance, voting power, and lock expiration'
+          description: 'Check veAERO balance, voting power, and lock expiration',
         },
         // Voting Tools
         {
           type: 'vote-gauges',
-          description: 'Vote for gauges with optimal weight distribution'
+          description: 'Vote for gauges with optimal weight distribution',
         },
         {
           type: 'get-voting-power',
-          description: 'Check current voting power and boost multipliers'
+          description: 'Check current voting power and boost multipliers',
         },
         // Utility Tools
         {
           type: 'get-token-info',
-          description: 'Get detailed information about any token including decimals, symbol, and contract address'
+          description:
+            'Get detailed information about any token including decimals, symbol, and contract address',
         },
         {
           type: 'get-gas-estimate',
-          description: 'Estimate gas costs for transactions with current network conditions'
+          description: 'Estimate gas costs for transactions with current network conditions',
         },
         {
           type: 'get-price-feed',
-          description: 'Get real-time price feeds for tokens and pairs'
+          description: 'Get real-time price feeds for tokens and pairs',
         },
         {
           type: 'get-transaction-status',
-          description: 'Check status and details of submitted transactions'
+          description: 'Check status and details of submitted transactions',
         },
         // Analytics Tools
         {
           type: 'get-market-analytics',
-          description: 'Access comprehensive market data including volume, liquidity, and price trends'
+          description:
+            'Access comprehensive market data including volume, liquidity, and price trends',
         },
         {
           type: 'get-user-analytics',
-          description: 'Analyze user portfolio performance, rewards, and positions'
+          description: 'Analyze user portfolio performance, rewards, and positions',
         },
         {
           type: 'get-protocol-analytics',
-          description: 'Access protocol-wide metrics including TVL, volume, and user statistics'
+          description: 'Access protocol-wide metrics including TVL, volume, and user statistics',
         },
         // Tutorial Tools
         {
           type: 'get-tutorial',
-          description: 'Access step-by-step guides for various protocol operations'
+          description: 'Access step-by-step guides for various protocol operations',
         },
         {
           type: 'get-faq',
-          description: 'Get answers to frequently asked questions about the protocol'
+          description: 'Get answers to frequently asked questions about the protocol',
         },
         {
           type: 'get-best-practices',
-          description: 'Learn about recommended strategies and best practices'
-        }
+          description: 'Learn about recommended strategies and best practices',
+        },
       ],
       image: `${BASE_URL}/aerodrome.svg`,
       categories: ['defi', 'analytics', 'portfolio'],

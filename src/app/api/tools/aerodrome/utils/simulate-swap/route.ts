@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import { publicClient } from '@/lib/viem';
 import { POOL_ABI } from '@/lib/contracts';
+import { publicClient } from '@/lib/viem';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
@@ -12,7 +12,7 @@ export async function GET(request: Request) {
     if (!poolAddress || !tokenIn || !amountIn) {
       return NextResponse.json(
         { error: 'Pool address, tokenIn, and amountIn are required' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -47,9 +47,6 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error('Error simulating swap:', error);
-    return NextResponse.json(
-      { error: 'Failed to simulate swap' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to simulate swap' }, { status: 500 });
   }
 }
