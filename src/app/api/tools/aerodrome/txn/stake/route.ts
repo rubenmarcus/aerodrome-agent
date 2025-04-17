@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { parseEther, encodeFunctionData } from 'viem';
-import { GAUGE_ABI } from '@/app/lib/contracts';
+import { GAUGE_ABI } from '@/lib/contracts';
 
 export async function POST(request: Request) {
   try {

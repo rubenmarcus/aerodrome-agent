@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { encodeFunctionData } from 'viem';
-import { VOTING_ESCROW_ABI } from '@/app/lib/contracts';
+import { VOTING_ESCROW_ABI } from '@/lib/contracts';
 
 export async function POST(request: Request) {
   try {
@@ -15,8 +15,8 @@ export async function POST(request: Request) {
 
     const data = encodeFunctionData({
       abi: VOTING_ESCROW_ABI,
-      functionName: 'merge',
-      args: [BigInt(fromTokenId), BigInt(toTokenId)],
+      functionName: 'increase_amount',
+      args: [BigInt(fromTokenId)],
     });
 
     return NextResponse.json({

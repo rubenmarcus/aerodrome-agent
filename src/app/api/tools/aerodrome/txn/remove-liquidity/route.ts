@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { encodeFunctionData } from 'viem';
-import { POOL_ABI } from '@/app/lib/contracts';
+import { POOL_ABI } from '@/lib/contracts';
 
 export async function POST(request: Request) {
   try {

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { encodeFunctionData } from 'viem';
-import { VOTING_ESCROW_ABI } from '@/app/lib/contracts';
+import { VOTING_ESCROW_ABI } from '@/lib/contracts';
 
 export async function POST(request: Request) {
   try {
@@ -15,8 +15,8 @@ export async function POST(request: Request) {
 
     const data = encodeFunctionData({
       abi: VOTING_ESCROW_ABI,
-      functionName: 'split',
-      args: [BigInt(tokenId), BigInt(amount)],
+      functionName: 'create_lock',
+      args: [BigInt(amount), BigInt(Math.floor(Date.now() / 1000) + 365 * 24 * 60 * 60)], // 1 year from now
     });
 
     return NextResponse.json({

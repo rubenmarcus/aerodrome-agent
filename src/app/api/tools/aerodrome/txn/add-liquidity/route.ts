@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { parseEther, encodeFunctionData } from 'viem';
 import { AERODROME_ROUTER } from '@/app/config';
-import { ROUTER_ABI } from '@/app/lib/contracts';
+import { ROUTER_ABI } from '@/lib/contracts';
 
 export async function POST(request: Request) {
   try {

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { parseEther, encodeFunctionData } from 'viem';
-import { BRIBE_ABI, CONTRACTS } from '@/app/lib/contracts';
+import { BRIBE_ABI, CONTRACTS } from '@/lib/contracts';
 
 export async function POST(request: Request) {
   try {

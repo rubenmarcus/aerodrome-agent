@@ -1,4 +1,4 @@
-import { createPublicClient, http, parseAbi } from 'viem';
+import { createPublicClient, http, parseAbi, getContract } from 'viem';
 import { base } from 'viem/chains';
 import { AERODROME_ROUTER } from '@/app/config';
 
@@ -43,34 +43,6 @@ export const ROUTER_ABI = [
   }
 ];
 
-export const GAUGE_ABI = [
-  {
-    inputs: [
-      { name: 'amount', type: 'uint256' }
-    ],
-    name: 'deposit',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function'
-  },
-  {
-    inputs: [
-      { name: 'amount', type: 'uint256' }
-    ],
-    name: 'withdraw',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function'
-  },
-  {
-    inputs: [],
-    name: 'getReward',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function'
-  }
-];
-
 export const VOTER_ABI = [
   {
     inputs: [
@@ -88,44 +60,6 @@ export const VOTER_ABI = [
       { name: 'weights', type: 'uint256[]' }
     ],
     name: 'vote',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function'
-  }
-];
-
-export const VOTING_ESCROW_ABI = [
-  {
-    inputs: [
-      { name: 'amount', type: 'uint256' },
-      { name: 'unlockTime', type: 'uint256' }
-    ],
-    name: 'create_lock',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function'
-  },
-  {
-    inputs: [
-      { name: 'amount', type: 'uint256' }
-    ],
-    name: 'increase_amount',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function'
-  },
-  {
-    inputs: [
-      { name: 'unlockTime', type: 'uint256' }
-    ],
-    name: 'increase_unlock_time',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function'
-  },
-  {
-    inputs: [],
-    name: 'withdraw',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function'
@@ -181,6 +115,13 @@ export const GAUGE_ABI = parseAbi([
   'function getReward() returns (bool)',
   'function balanceOf(address) view returns (uint256)',
   'function earned(address) view returns (uint256)',
+  'function pool() view returns (address)',
+  'function totalVotes() view returns (uint256)',
+  'function currentApr() view returns (uint256)',
+  'function totalSupply() view returns (uint256)',
+  'function rewardRate() view returns (uint256)',
+  'function periodFinish() view returns (uint256)',
+  'function rewardToken() view returns (address)',
 ]);
 
 export const GAUGE_CONTROLLER_ABI = parseAbi([

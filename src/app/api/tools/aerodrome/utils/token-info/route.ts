@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { publicClient } from '@/app/lib/viem';
-import { ERC20_ABI } from '@/app/lib/contracts';
+import { publicClient } from '@/lib/viem';
+import { ERC20_ABI } from '@/lib/contracts';
 
 export async function GET(request: Request) {
   try {
