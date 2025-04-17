@@ -323,10 +323,10 @@ I maintain these standards to ensure secure, efficient, and profitable DeFi oper
           description: 'Learn about recommended strategies and best practices',
         },
       ],
-      image: `${BASE_URL}/aerodrome.svg`,
+      image: 'https://aerodrome-agent.vercel.app/logo.png',
       categories: ['defi', 'analytics', 'portfolio'],
       chainIds: [8453],
     },
-    image: `${BASE_URL}/aerodrome.svg`,
+    image: 'https://aerodrome-agent.vercel.app/logo.png',
   },
 };
