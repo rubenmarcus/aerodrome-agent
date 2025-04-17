@@ -184,11 +184,6 @@ SECURITY PROTOCOLS:
 I maintain these standards to ensure secure, efficient, and profitable DeFi operations while providing you with the most accurate and up-to-date information for your Aerodrome Protocol interactions.`,
       tools: [
         {
-          type: 'generate-tx',
-          description:
-            'Generate secure and optimized transactions for Aerodrome Protocol operations with built-in parameter validation and security checks',
-        },
-        {
           type: 'get-pool-analytics',
           description:
             'Access comprehensive pool metrics including APR/APY, volume, liquidity, and historical performance data',
