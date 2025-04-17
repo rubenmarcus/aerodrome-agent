@@ -1,70 +1,78 @@
 import { NextResponse } from 'next/server';
-import { publicClient } from '@/lib/viem';
-import { POOL_ABI, ERC20_ABI } from '@/lib/contracts';
+import { getPools } from '@/utils/graph';
+
+function getTokenAddress(token: string): string {
+  // If it's already an address, return it
+  if (token.startsWith('0x')) {
+    return token.toLowerCase();
+  }
+  // Otherwise return the input as is (could be a symbol or other identifier)
+  return token.toLowerCase();
+}
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const poolAddress = searchParams.get('poolAddress');
+    const poolId = searchParams.get('poolId');
+    const token0 = searchParams.get('token0');
+    const token1 = searchParams.get('token1');
 
-    if (!poolAddress) {
+    // Validate input parameters
+    if (!poolId && (!token0 || !token1)) {
       return NextResponse.json(
-        { error: 'Pool address is required' },
+        { error: 'Either poolId or both token0 and token1 are required' },
         { status: 400 }
       );
     }
 
-    const [reserves, totalSupply, token0, token1] = await Promise.all([
-      publicClient.readContract({
-        address: poolAddress as `0x${string}`,
-        abi: POOL_ABI,
-        functionName: 'getReserves',
-      }),
-      publicClient.readContract({
-        address: poolAddress as `0x${string}`,
-        abi: POOL_ABI,
-        functionName: 'totalSupply',
-      }),
-      publicClient.readContract({
-        address: poolAddress as `0x${string}`,
-        abi: POOL_ABI,
-        functionName: 'token0',
-      }),
-      publicClient.readContract({
-        address: poolAddress as `0x${string}`,
-        abi: POOL_ABI,
-        functionName: 'token1',
-      }),
-    ]);
+    let pools;
+    if (poolId) {
+      // If poolId is provided, try to get the pool directly
+      pools = await getPools({
+        token: poolId,
+        limit: 1,
+      });
+    } else if (token0 && token1) {
+      // Convert token symbols to addresses if needed
+      const token0Address = getTokenAddress(token0);
+      const token1Address = getTokenAddress(token1);
 
-    const [token0Symbol, token1Symbol] = await Promise.all([
-      publicClient.readContract({
-        address: token0 as `0x${string}`,
-        abi: ERC20_ABI,
-        functionName: 'symbol',
-      }),
-      publicClient.readContract({
-        address: token1 as `0x${string}`,
-        abi: ERC20_ABI,
-        functionName: 'symbol',
-      }),
-    ]);
+      // Search for pools containing token0
+      pools = await getPools({
+        token: token0Address,
+        limit: 100, // Get more pools to ensure we find the right pair
+      });
+
+      // Find the pool that contains both tokens
+      pools = pools.filter(pool =>
+        (pool.token0.id.toLowerCase() === token0Address &&
+         pool.token1.id.toLowerCase() === token1Address) ||
+        (pool.token0.id.toLowerCase() === token1Address &&
+         pool.token1.id.toLowerCase() === token0Address)
+      );
+    }
+
+    if (!pools || pools.length === 0) {
+      return NextResponse.json(
+        { error: 'Pool not found for the specified tokens' },
+        { status: 404 }
+      );
+    }
+
+    const pool = pools[0];
 
     return NextResponse.json({
-      poolAddress,
-      reserves: {
-        token0: (reserves[0] as bigint).toString(),
-        token1: (reserves[1] as bigint).toString(),
-      },
-      totalSupply: (totalSupply as bigint).toString(),
+      poolAddress: pool.id,
+      tvl: pool.totalValueLockedUSD,
+      apr: pool.apr,
       tokens: {
         token0: {
-          address: token0,
-          symbol: token0Symbol,
+          address: pool.token0.id,
+          symbol: pool.token0.symbol,
         },
         token1: {
-          address: token1,
-          symbol: token1Symbol,
+          address: pool.token1.id,
+          symbol: pool.token1.symbol,
         },
       },
     });

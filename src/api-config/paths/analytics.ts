@@ -2,17 +2,35 @@ export const analyticsPaths = {
   '/api/tools/aerodrome/analytics/pool-analytics': {
     get: {
       summary: 'Get pool analytics',
-      description: 'Retrieves analytics data for a specific liquidity pool',
+      description: 'Retrieves analytics data for a specific liquidity pool by pool ID or token pair',
       operationId: 'get-pool-analytics',
       parameters: [
         {
-          name: 'poolAddress',
+          name: 'poolId',
           in: 'query',
-          required: true,
+          required: false,
           schema: {
             type: 'string',
           },
-          description: 'The pool address to analyze',
+          description: 'The pool ID to analyze (either pool address or token pair)',
+        },
+        {
+          name: 'token0',
+          in: 'query',
+          required: false,
+          schema: {
+            type: 'string',
+          },
+          description: 'First token in the pair (address or symbol)',
+        },
+        {
+          name: 'token1',
+          in: 'query',
+          required: false,
+          schema: {
+            type: 'string',
+          },
+          description: 'Second token in the pair (address or symbol)',
         },
       ],
       responses: {
@@ -23,25 +41,80 @@ export const analyticsPaths = {
               schema: {
                 type: 'object',
                 properties: {
+                  poolAddress: {
+                    type: 'string',
+                    description: 'The pool address',
+                  },
                   apr: {
                     type: 'string',
                     description: 'Annual Percentage Rate',
-                  },
-                  apy: {
-                    type: 'string',
-                    description: 'Annual Percentage Yield',
-                  },
-                  volume24h: {
-                    type: 'string',
-                    description: '24-hour trading volume',
                   },
                   tvl: {
                     type: 'string',
                     description: 'Total Value Locked',
                   },
-                  impermanentLoss: {
+                  tokens: {
+                    type: 'object',
+                    properties: {
+                      token0: {
+                        type: 'object',
+                        properties: {
+                          address: {
+                            type: 'string',
+                            description: 'Token address',
+                          },
+                          symbol: {
+                            type: 'string',
+                            description: 'Token symbol',
+                          },
+                        },
+                      },
+                      token1: {
+                        type: 'object',
+                        properties: {
+                          address: {
+                            type: 'string',
+                            description: 'Token address',
+                          },
+                          symbol: {
+                            type: 'string',
+                            description: 'Token symbol',
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        '400': {
+          description: 'Invalid parameters',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  error: {
                     type: 'string',
-                    description: 'Estimated impermanent loss',
+                    description: 'Error message',
+                  },
+                },
+              },
+            },
+          },
+        },
+        '404': {
+          description: 'Pool not found',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  error: {
+                    type: 'string',
+                    description: 'Error message',
                   },
                 },
               },
@@ -1189,6 +1262,106 @@ export const analyticsPaths = {
                         },
                       },
                     },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  '/api/tools/aerodrome/analytics/pool-analytics-by-tokens': {
+    get: {
+      summary: 'Get pool analytics by token pair',
+      description: 'Retrieves analytics data for a liquidity pool by specifying the token pair',
+      operationId: 'get-pool-analytics-by-tokens',
+      parameters: [
+        {
+          name: 'token0',
+          in: 'query',
+          required: true,
+          schema: {
+            type: 'string',
+          },
+          description: 'Address or symbol of the first token in the pair',
+        },
+        {
+          name: 'token1',
+          in: 'query',
+          required: true,
+          schema: {
+            type: 'string',
+          },
+          description: 'Address or symbol of the second token in the pair',
+        },
+      ],
+      responses: {
+        '200': {
+          description: 'Pool analytics retrieved successfully',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  poolAddress: {
+                    type: 'string',
+                    description: 'The pool address',
+                  },
+                  apr: {
+                    type: 'string',
+                    description: 'Annual Percentage Rate',
+                  },
+                  tvl: {
+                    type: 'string',
+                    description: 'Total Value Locked',
+                  },
+                  tokens: {
+                    type: 'object',
+                    properties: {
+                      token0: {
+                        type: 'object',
+                        properties: {
+                          address: {
+                            type: 'string',
+                            description: 'Token address',
+                          },
+                          symbol: {
+                            type: 'string',
+                            description: 'Token symbol',
+                          },
+                        },
+                      },
+                      token1: {
+                        type: 'object',
+                        properties: {
+                          address: {
+                            type: 'string',
+                            description: 'Token address',
+                          },
+                          symbol: {
+                            type: 'string',
+                            description: 'Token symbol',
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        '404': {
+          description: 'Pool not found for the specified token pair',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  error: {
+                    type: 'string',
+                    description: 'Error message',
                   },
                 },
               },

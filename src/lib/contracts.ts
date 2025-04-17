@@ -40,6 +40,16 @@ export const ROUTER_ABI = [
     ],
     stateMutability: 'nonpayable',
     type: 'function'
+  },
+  {
+    inputs: [
+      { name: 'tokenA', type: 'address' },
+      { name: 'tokenB', type: 'address' }
+    ],
+    name: 'getPool',
+    outputs: [{ name: 'pool', type: 'address' }],
+    stateMutability: 'view',
+    type: 'function'
   }
 ];
 
@@ -133,7 +143,7 @@ export const GAUGE_CONTROLLER_ABI = parseAbi([
 
 export const BRIBE_ABI = parseAbi([
   'function createBribe(address, address, uint256) returns (bool)',
-  'function getActiveBribes(address) view returns (tuple(address,uint256,uint256,uint256)[])',
+  'function getActiveBribes(address) view returns ((address,uint256,uint256,uint256)[])',
   'function getBribeValue(address) view returns (uint256)',
   'function getBribeAPR(address) view returns (uint256)',
 ]);
