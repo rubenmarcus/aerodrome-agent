@@ -1,5 +1,5 @@
 export const positionPaths = {
-  '/api/tools/aerodrome/position-management': {
+  '/api/tools/aerodrome/analytics/position-management': {
     get: {
       summary: 'Get position management',
       description: 'Retrieves optimal entry/exit strategies for a position',

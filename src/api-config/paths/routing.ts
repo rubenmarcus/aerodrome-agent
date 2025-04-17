@@ -1,5 +1,5 @@
 export const routingPaths = {
-  '/api/tools/aerodrome/optimal-routing': {
+  '/api/tools/aerodrome/analytics/optimal-routing': {
     get: {
       summary: 'Get optimal routing',
       description: 'Retrieves optimal swap route between tokens',

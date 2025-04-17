@@ -1,5 +1,5 @@
 export const poolsPaths = {
-  '/api/tools/aerodrome/pools-list': {
+  '/api/tools/aerodrome/analytics/pools-list': {
     get: {
       summary: 'Get Aerodrome pools list',
       description: 'Retrieves a list of Aerodrome pools with optional filtering and sorting',
